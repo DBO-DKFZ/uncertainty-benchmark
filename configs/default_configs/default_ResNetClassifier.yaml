@@ -1,0 +1,5 @@
+size: 34
+num_classes: 2
+lr: 0.0001
+opti_metric: val_loss
+patience: 3

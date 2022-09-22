@@ -1,0 +1,7 @@
+path: ${env:DATASET_LOCATION}/Camelyon16/tiles
+path_Cam17 : ${env:DATASET_LOCATION}/Camelyon17/tiles
+batch_size: 128
+num_workers: 8
+tumor_threshold: 0.25
+sampling_factor: "undersampling"
+val_subset: 1.0

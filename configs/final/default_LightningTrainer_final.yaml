@@ -1,0 +1,12 @@
+callbacks:
+  - class_path: pytorch_lightning.callbacks.TQDMProgressBar
+    init_args:
+      refresh_rate: 100
+max_epochs: 30
+accelerator: gpu
+devices: 1
+strategy: null
+precision: 16
+num_sanity_val_steps: 0
+reload_dataloaders_every_n_epochs: 1
+move_metrics_to_cpu: false

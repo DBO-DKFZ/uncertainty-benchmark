@@ -1,0 +1,12 @@
+path: ${env:DATASET_LOCATION}/Camelyon17/tiles
+batch_size: 128
+num_workers: 8
+tumor_threshold: 0.25
+id_centers:
+- 0
+- 1
+- 3
+sampling_factor: -4.0
+val_subset: 1.0
+transformlib: torchvision
+augmentations: crop

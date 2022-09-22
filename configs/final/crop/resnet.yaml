@@ -1,0 +1,10 @@
+checkpoint: null
+name: crop/resnet
+save_dir: ${env:EXPERIMENT_LOCATION}/Cam17_final
+eval: true
+checkpoint_metric: val_b_acc
+data_class: Camelyon17BaseDataModule
+data: ../default_Camelyon17BaseDataModule_crop.yaml
+model_class: ResNetClassifier
+model: ../../default_configs/default_ResNetClassifier.yaml
+trainer: ../default_LightningTrainer_final.yaml

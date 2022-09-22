@@ -1,0 +1,8 @@
+size: 34
+num_classes: 2
+svi_samples: 10
+lr: 0.0001
+opti_metric: val_loss
+patience: 3
+inference: ffg
+kl_weight: 0.3

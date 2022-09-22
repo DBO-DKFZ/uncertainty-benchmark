@@ -1,0 +1,27 @@
+name: uctbm
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - pip
+  - python=3.9.*
+  - pytorch=1.11.*
+  - torchvision=0.12.*
+  - cudatoolkit=11.3.*
+  - pip:
+    - pytorch-lightning==1.6.3
+    - torchmetrics==0.7.*
+    - tensorboard==2.7.*
+    - einops==0.4.*
+    - jsonargparse[signatures]==4.7.*
+    - omegaconf==2.1.*
+    - bayesian-torch==0.2.1
+    - optuna==2.10.*
+    - jupyterlab==3.3.*
+    - scikit-learn==1.1.*
+    - matplotlib==3.5.*
+    - pandas==1.4.*
+    - seaborn==0.11.*
+    - protobuf==3.20.*
+    

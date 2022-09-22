@@ -1,0 +1,16 @@
+ensemble_size: 3
+split_lvl: 0
+size: 34
+num_classes: 2
+reduce_fx: null
+loss_function:
+  class_path: camelyon.Losses.EnsembleLosses.MultiHeadCrossEntropyLoss
+  init_args:
+    tradeoff: 0.0
+    twoD: false
+    ignore_index: 255
+lr: 0.0001
+opti_metric: val_loss
+patience: 3
+max_num_datasets: 2
+merge_lvl: null
