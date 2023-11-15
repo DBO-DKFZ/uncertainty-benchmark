@@ -55,7 +55,6 @@ class Run:
         lazy: bool = True,
         properties: Optional[dict] = None,
     ):
-
         exp_path = Path(run_dir) / exp_dir
         config_path = exp_path / config_path
 
@@ -97,7 +96,6 @@ class Run:
 
     @property
     def val_preds(self):
-
         if self._preds["val"] is None:
             self._preds["val"] = torch.load(str(self._preds_path["val"]))
 
@@ -105,7 +103,6 @@ class Run:
 
     @property
     def test_id_preds(self):
-
         if self._preds["test_id"] is None:
             self._preds["test_id"] = torch.load(str(self._preds_path["test_id"]))
 
@@ -113,7 +110,6 @@ class Run:
 
     @property
     def test_ood_preds(self):
-
         if self._preds["test_ood"] is None:
             self._preds["test_ood"] = torch.load(str(self._preds_path["test_ood"]))
 
@@ -121,7 +117,6 @@ class Run:
 
     @property
     def test_ood2_preds(self):
-
         if self._preds["test_ood2"] is None:
             self._preds["test_ood2"] = torch.load(str(self._preds_path["test_ood2"]))
 
@@ -129,7 +124,6 @@ class Run:
 
     @property
     def test_ood4_preds(self):
-
         if self._preds["test_ood4"] is None:
             self._preds["test_ood4"] = torch.load(str(self._preds_path["test_ood4"]))
 
@@ -137,7 +131,6 @@ class Run:
 
     @property
     def config(self):
-
         if self._config is None:
             self._config = yaml.safe_load(open(str(self.config_file), "r"))
 
@@ -220,7 +213,6 @@ class EnsembleRun(Run):
         name: str,
         lazy: bool = True,
     ):
-
         self.runs = runs
 
         # exp_path = Path(run_dir) / exp_dir
@@ -260,7 +252,6 @@ class EnsembleRun(Run):
             self.test_ood_preds
 
     def _compute_ensemble_preds(self, preds: Sequence[dict[torch.Tensor]]):
-
         new_keys = ["softmax", "label"]
         for key in new_keys:
             assert key in preds[0].keys()
@@ -274,7 +265,6 @@ class EnsembleRun(Run):
         # https://en.wikipedia.org/wiki/Mixture_distribution#Moments
         # We further assume that all subpopulations are of equal size! This is important.
         if "variance" in preds[0].keys():
-
             # Tricks used here only work for binary classification.
             assert softmaxes.shape[2] == 2
 
@@ -295,7 +285,6 @@ class EnsembleRun(Run):
 
     @property
     def val_preds(self):
-
         if self._preds["val"] is None:
             preds = [run.val_preds for run in self.runs]
 
@@ -305,7 +294,6 @@ class EnsembleRun(Run):
 
     @property
     def test_id_preds(self):
-
         if self._preds["test_id"] is None:
             preds = [run.test_id_preds for run in self.runs]
 
@@ -314,7 +302,6 @@ class EnsembleRun(Run):
 
     @property
     def test_ood_preds(self):
-
         if self._preds["test_ood"] is None:
             preds = [run.test_ood_preds for run in self.runs]
 
@@ -324,7 +311,6 @@ class EnsembleRun(Run):
 
     @property
     def test_ood2_preds(self):
-
         if self._preds["test_ood2"] is None:
             preds = [run.test_ood2_preds for run in self.runs]
 
@@ -334,7 +320,6 @@ class EnsembleRun(Run):
 
     @property
     def test_ood4_preds(self):
-
         if self._preds["test_ood4"] is None:
             preds = [run.test_ood4_preds for run in self.runs]
 
@@ -344,7 +329,6 @@ class EnsembleRun(Run):
 
     @property
     def config(self):
-
         if self._config is None:
             self._config = yaml.safe_load(open(str(self.config_file), "r"))
 
@@ -375,7 +359,6 @@ def create_runs_from_folder(
     prediction_path="predictions",
     properties=None,
 ):
-
     runs = []
 
     dir = Path(run_dir) / Path(exp_dir)
@@ -423,7 +406,6 @@ def create_ensemble_from_folder(
     prediction_path="predictions",
     properties=None,
 ):
-
     runs = create_runs_from_folder(
         exp_dir, checkpoint, name, None, run_dir, config_path, prediction_path, properties=properties
     )
@@ -445,7 +427,6 @@ def create_ensemble_from_folder(
 
 
 def tile_extractor(preds):
-
     out = torch.cat(list(map(lambda x: torch.stack(x[0]), preds)), dim=1)
     sm = torch.cat(list(map(lambda x: x[1], preds)), dim=0)
     label = torch.cat(list(map(lambda x: x[2], preds)), dim=0)
@@ -454,7 +435,6 @@ def tile_extractor(preds):
 
 
 def extract_results(results):
-
     if isinstance(results, list):
         if len(results) == 2:
             out_sm, y = results
@@ -479,7 +459,6 @@ def extract_var(results):
 
 
 def generate_slide_vis_from_run(run: Run, split: str, select_slides=None, tile_render_size: int = 8):
-
     preds, _, dataset = run.get_preds_and_dataset(split)
     preds = preds["softmax"]
     images = dataset.build_slide_lvl_images(
@@ -492,7 +471,6 @@ def generate_slide_vis_from_run(run: Run, split: str, select_slides=None, tile_r
 def generate_slide_preds_from_run(
     run: Run, split: str, select_slides=None, tumor_thresh: float = 0.5, approach: str = "convolution"
 ):
-
     preds, _, dataset = run.get_preds_and_dataset(split)
     preds = preds["softmax"]
     slide_preds = dataset.generate_slide_prediction(
@@ -515,7 +493,6 @@ def visualize_slides(slides, combine: bool = False, save_path=None):
         fig, all_axes = matplotlib.pyplot.subplots(len(slides), len(slides[0].keys()) - 1)
 
     for i, image_dict in enumerate(slides):
-
         name = image_dict["slidename"]
         keys = list(image_dict.keys())
         keys.remove("slidename")
@@ -526,7 +503,6 @@ def visualize_slides(slides, combine: bool = False, save_path=None):
             axes = all_axes[i, :]
 
         for j, key in enumerate(keys):
-
             if not combine or i == 0:
                 axes[j].set_title(str(key))
             if combine and j == 0:
@@ -552,14 +528,12 @@ def visualize_slides(slides, combine: bool = False, save_path=None):
 
 
 def get_tiles_by_uncertainty(runs: Union[Run, list[Run]], split: str, num: int = 20):
-
     if not isinstance(runs, list):
         runs = [runs]
 
     conf = 0.0
 
     for run in runs:
-
         preds, _, dataset = run.get_preds_and_dataset(split)
         preds = preds["softmax"]
 
@@ -593,7 +567,6 @@ def average_disagreement(preds):
     c = 0.0
     for i in range(len(preds)):
         for j in range(len(preds)):
-
             if i >= j:
                 continue
             c += 1
@@ -623,7 +596,6 @@ def compute_metrics_label_noise(
     ),
     compute_significance=False,
 ):
-
     if isinstance(split, str):
         splits = [split]
     else:
@@ -632,11 +604,9 @@ def compute_metrics_label_noise(
     results = {}
 
     for split in splits:
-
         print(f"Computing {split} metrics.")
 
         for run in tqdm(runs):
-
             if split == "val":
                 run_preds = run.val_preds
             elif split == "test_id":
@@ -751,13 +721,11 @@ def compute_metrics_label_noise(
         import scipy.stats as scs
 
         for metric in metrics:
-
             p_matrix = pd.DataFrame(np.ones((len(methods), len(methods))), index=methods, columns=methods)
 
             for method in methods:
                 for method2 in methods:
                     if method != method2:
-
                         t, p = scs.ttest_ind(
                             res_df[metric][res_df["method"] == method].to_numpy(),
                             res_df[metric][res_df["method"] == method].to_numpy(),
@@ -828,7 +796,6 @@ def create_risk_reject_curve(preds, labels, metric_func, x_val_func, order: str 
     x_val = x_val_func(preds, labels) if x_val_func is not None else preds
 
     if order is not None:
-
         ind = np.argsort(x_val)
 
         if order == "desc":
@@ -842,7 +809,6 @@ def create_risk_reject_curve(preds, labels, metric_func, x_val_func, order: str 
     x_axis_val = []
     thresholds = []
     for i in range(0, len(x_val), step_size):
-
         if i > len(labels) - 1:
             continue
         else:
@@ -866,13 +832,11 @@ def compute_id_ood_reject_metrics(
     norm_x=True,
     x_range=None,
 ):
-
     id_groups = {}
     ood_groups = {}
 
     # Compute reject curve and save x and y in a dict of pandas series for id and ood data
     for i, run in enumerate(runs):
-
         results_id = run.test_id_preds
         results_ood = run.test_ood_preds
 
@@ -908,7 +872,6 @@ def compute_id_ood_reject_metrics(
     groups = list(id_groups.keys())
 
     for group in groups:
-
         # Put all experiments from one group into a dataframe (coloumn-wise).
         id_df = pd.DataFrame(id_groups[group], dtype=float).interpolate()
         ood_df = pd.DataFrame(ood_groups[group], dtype=float).interpolate()
@@ -961,7 +924,6 @@ def compute_id_ood_auroc2(runs, plot_std=False, colors=None):
     result_dict = {}
 
     for run in runs:
-
         results_id = run.test_id_preds
         results_ood = run.test_ood_preds
 
@@ -1002,12 +964,10 @@ def compute_id_ood_auroc2(runs, plot_std=False, colors=None):
 
 
 def compute_id_ood_auroc(runs: Sequence[Run]) -> None:
-
     groups = {}
 
     # Compute ROC curve and save x and y in a dict of pandas series
     for run in runs:
-
         results_id = run.test_id_preds
         results_ood = run.test_ood_preds
 
@@ -1037,7 +997,6 @@ def compute_id_ood_auroc(runs: Sequence[Run]) -> None:
     group_names = list(groups.keys())
 
     for group in group_names:
-
         # Put all experiments from one group into a dataframe (coloumn-wise). As they have differing x-axis, interpolate the missing values.
         df = pd.DataFrame(groups[group], dtype=float).interpolate().reset_index().rename(columns={"index": "x"})
 
@@ -1056,7 +1015,6 @@ def compute_id_ood_auroc(runs: Sequence[Run]) -> None:
 
 
 if __name__ == "__main__":
-
     user = "Hendrik"
 
     if user == "Hendrik":
